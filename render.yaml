@@ -1,0 +1,65 @@
+# ============================================================================
+#  Render Blueprint para PagoYa API
+# ----------------------------------------------------------------------------
+#  Este archivo le dice a Render que infraestructura crear automaticamente:
+#    1) Una base de datos PostgreSQL.
+#    2) Un web service (la API) construido con el Dockerfile del repo.
+#
+#  Como desplegar:
+#    1. Sube este repositorio a GitHub.
+#    2. En Render: New +  ->  Blueprint  ->  conecta el repo.
+#    3. Render lee este render.yaml y crea todo. Solo te pedira completar
+#       las variables marcadas con "sync: false" (ver mas abajo).
+# ============================================================================
+
+databases:
+  - name: pagoya-db          # Nombre de la base de datos en Render
+    databaseName: pagoya_db  # Nombre de la BD interna
+    user: pagoya             # Usuario de la BD
+    plan: free               # Plan gratuito (cambialo si necesitas mas)
+
+services:
+  - type: web                # Servicio web accesible por HTTP
+    name: pagoya-api         # Nombre del servicio (define la URL publica)
+    runtime: docker          # Usa el Dockerfile del repositorio
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /v3/api-docs  # Ruta publica (200) para verificar que vive
+
+    envVars:
+      # --- Perfil de Spring: activa application-prod.yml ---
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      # --- Conexion a la base de datos (se toman de pagoya-db) ---
+      - key: DB_HOST
+        fromDatabase:
+          name: pagoya-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: pagoya-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: pagoya-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: pagoya-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: pagoya-db
+          property: password
+
+      # --- Secreto JWT: Render lo genera aleatorio y seguro (>=32 bytes) ---
+      - key: JWT_SECRET
+        generateValue: true
+
+      # --- Origenes permitidos para CORS (tu frontend desplegado) ---
+      #  sync: false  =>  Render NO lo autocompleta; lo escribes tu en el
+      #  dashboard. Pon la URL de tu app, separada por comas si son varias.
+      #  Ej: https://mi-frontend.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false

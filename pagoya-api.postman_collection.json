@@ -1,0 +1,1066 @@
+{
+  "info": {
+    "name": "pagoya-api",
+    "description": "coleccion postman para pagoya api con seguridad jwt + refresh tokens",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "b1f7e2c0-9d3a-4f1e-9a2b-pagoya0000001"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "jwt",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "customer_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "account_number",
+      "value": "ACC-ANA-001",
+      "type": "string"
+    },
+    {
+      "key": "target_account_number",
+      "value": "ACC-LUIS-001",
+      "type": "string"
+    },
+    {
+      "key": "page",
+      "value": "0",
+      "type": "string"
+    },
+    {
+      "key": "size",
+      "value": "10",
+      "type": "string"
+    },
+    {
+      "key": "report_from",
+      "value": "2026-04-01",
+      "type": "string"
+    },
+    {
+      "key": "report_to",
+      "value": "2026-04-25",
+      "type": "string"
+    },
+    {
+      "key": "provider_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "bill_code",
+      "value": "REC-001",
+      "type": "string"
+    },
+    {
+      "key": "recurring_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "dni",
+      "value": "87654321"
+    }
+  ],
+  "item": [
+    {
+      "name": "auth",
+      "description": "registro atomico, login, refresh, logout, logout-all",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nuevo@pagoya.com\",\n  \"password\": \"password123\",\n  \"fullName\": \"Nuevo Usuario\",\n  \"dni\": \"55667788\",\n  \"phone\": \"987000111\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "POST /api/auth/register. crea user + customer atomicamente. devuelve RegisterResponse."
+          }
+        },
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('jwt', data.accessToken);",
+                  "pm.collectionVariables.set('refresh', data.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana@pagoya.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "POST /api/auth/login. emite access (jwt) + refresh. el script guarda jwt y refresh en variables de la coleccion."
+          }
+        },
+        {
+          "name": "login (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('jwt', data.accessToken);",
+                  "pm.collectionVariables.set('refresh', data.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@pagoya.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "POST /api/auth/login. emite access (jwt) + refresh. el script guarda jwt y refresh en variables de la coleccion."
+          }
+        },
+        {
+          "name": "refresh",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('jwt', data.accessToken);",
+                  "pm.collectionVariables.set('refresh', data.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ]
+            },
+            "description": "POST /api/auth/refresh. rotation: revoca el refresh y devuelve un access y refresh nuevos."
+          }
+        },
+        {
+          "name": "logout",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "POST /api/auth/logout. revoca el refresh recibido. responde 204."
+          }
+        },
+        {
+          "name": "logout all",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout-all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout-all"
+              ]
+            },
+            "description": "POST /api/auth/logout-all. requiere bearer. revoca todos los refresh del usuario."
+          }
+        }
+      ]
+    },
+    {
+      "name": "customers",
+      "description": "perfil del usuario autenticado y consultas de cliente",
+      "item": [
+        {
+          "name": "me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/customers/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "me"
+              ]
+            },
+            "description": "GET /api/customers/me. perfil del usuario autenticado (sin id en url)."
+          }
+        },
+        {
+          "name": "update me",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Ana Lopez Garcia\",\n  \"phone\": \"999888777\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/customers/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "me"
+              ]
+            },
+            "description": "PUT /api/customers/me. actualiza fullName y phone del usuario autenticado."
+          }
+        },
+        {
+          "name": "deactivate me (darse de baja)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/customers/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "find by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/customers/{{customer_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customer_id}}"
+              ]
+            },
+            "description": "GET /api/customers/{id}."
+          }
+        },
+        {
+          "name": "find all",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/customers?page={{page}}&size={{size}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "customers"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            },
+            "description": "GET /api/customers?page=0&size=10."
+          }
+        },
+        {
+          "name": "delete (admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/customers/{{customer_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customer_id}}"
+              ]
+            },
+            "description": "DELETE /api/customers/{id}. requiere rol ADMIN. con CUSTOMER → 403."
+          }
+        }
+      ]
+    },
+    {
+      "name": "accounts",
+      "description": "cuentas digitales (todas requieren jwt)",
+      "item": [
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"SAVINGS\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "deposit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 500.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/{{account_number}}/deposit",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "{{account_number}}",
+                "deposit"
+              ]
+            }
+          }
+        },
+        {
+          "name": "close account",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/{{account_number}}/close",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "{{account_number}}",
+                "close"
+              ]
+            }
+          }
+        },
+        {
+          "name": "my accounts (me)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "recipient by dni",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/recipient?dni={{dni}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "recipient"
+              ],
+              "query": [
+                {
+                  "key": "dni",
+                  "value": "{{dni}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "create target",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"CHECKING\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/{{account_number}}/balance",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "{{account_number}}",
+                "balance"
+              ]
+            }
+          }
+        },
+        {
+          "name": "find by customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/customer/{{customer_id}}?page={{page}}&size={{size}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "customer",
+                "{{customer_id}}"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "report summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/reports/summary",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "reports",
+                "summary"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "transfers",
+      "description": "transferencias entre cuentas (todas requieren jwt)",
+      "item": [
+        {
+          "name": "transfer pen",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceAccountNumber\": \"{{account_number}}\",\n  \"type\": \"INTERNAL\",\n  \"targetAccountNumber\": \"{{target_account_number}}\",\n  \"amount\": 200.0,\n  \"currency\": \"PEN\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/transfers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transfers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "transfer usd",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceAccountNumber\": \"{{account_number}}\",\n  \"type\": \"INTERNAL\",\n  \"targetAccountNumber\": \"{{target_account_number}}\",\n  \"amount\": 100.0,\n  \"currency\": \"USD\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/transfers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transfers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "transfer external",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceAccountNumber\": \"{{account_number}}\",\n  \"type\": \"EXTERNAL\",\n  \"externalBankName\": \"BCP\",\n  \"externalAccountNumber\": \"00219912345678901234\",\n  \"externalBeneficiaryName\": \"Juan Perez\",\n  \"amount\": 50.0,\n  \"currency\": \"PEN\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/transfers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transfers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "find by account",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/transfers/account/{{account_number}}?page={{page}}&size={{size}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transfers",
+                "account",
+                "{{account_number}}"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "report by currency",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/transfers/reports/by-currency",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transfers",
+                "reports",
+                "by-currency"
+              ]
+            }
+          }
+        },
+        {
+          "name": "report by day",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/transfers/reports/by-day?from={{report_from}}&to={{report_to}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transfers",
+                "reports",
+                "by-day"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "{{report_from}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{report_to}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "report by status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/transfers/reports/by-status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transfers",
+                "reports",
+                "by-status"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "billing",
+      "description": "pagos de servicios (todos requieren jwt)",
+      "item": [
+        {
+          "name": "list providers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/service-providers?page={{page}}&size={{size}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "service-providers"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "pay",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": {{customer_id}},\n  \"providerId\": {{provider_id}},\n  \"billCode\": \"{{bill_code}}\",\n  \"amount\": 120.50\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bill-payments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bill-payments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "find by customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bill-payments/customer/{{customer_id}}?page={{page}}&size={{size}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bill-payments",
+                "customer",
+                "{{customer_id}}"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "report by category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bill-payments/customer/{{customer_id}}/by-category",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bill-payments",
+                "customer",
+                "{{customer_id}}",
+                "by-category"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "recurring",
+      "description": "pagos recurrentes (todos requieren jwt)",
+      "item": [
+        {
+          "name": "schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": {{customer_id}},\n  \"providerId\": {{provider_id}},\n  \"billCode\": \"{{bill_code}}\",\n  \"amount\": 120.50,\n  \"frequency\": \"MONTHLY\",\n  \"dayOfMonth\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/recurring-bill-payments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "recurring-bill-payments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "find by customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/recurring-bill-payments/customer/{{customer_id}}?page={{page}}&size={{size}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "recurring-bill-payments",
+                "customer",
+                "{{customer_id}}"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "pause",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/recurring-bill-payments/{{recurring_id}}/pause",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "recurring-bill-payments",
+                "{{recurring_id}}",
+                "pause"
+              ]
+            }
+          }
+        },
+        {
+          "name": "resume",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/recurring-bill-payments/{{recurring_id}}/resume",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "recurring-bill-payments",
+                "{{recurring_id}}",
+                "resume"
+              ]
+            }
+          }
+        },
+        {
+          "name": "cancel",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/recurring-bill-payments/{{recurring_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "recurring-bill-payments",
+                "{{recurring_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
