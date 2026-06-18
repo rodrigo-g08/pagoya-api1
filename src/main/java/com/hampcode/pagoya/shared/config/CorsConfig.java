@@ -15,7 +15,7 @@ public class CorsConfig {
     // Origenes permitidos. Se configuran con la variable de entorno
     // CORS_ALLOWED_ORIGINS (lista separada por comas). Si no se define,
     // usa los origenes de desarrollo local.
-    @Value("${CORS_ALLOWED_ORIGINS:http://localhost:4200,http://localhost:53555}")
+    @Value("${CORS_ALLOWED_ORIGINS:pagoya-web-upc.netlify.app}")
     private List<String> allowedOrigins;
 
     @Bean
